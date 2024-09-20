@@ -22,7 +22,6 @@ export interface RespondedHook {
 export interface CreateFyOptions {
   beforeRequest?: RequestInterceptor
   responded?: RespondedHook
-  throwHttpErrors?: boolean
 }
 
 export interface FyInstance {
@@ -37,7 +36,7 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
   const beforeInterceptors: RequestInterceptor[] = []
   const afterInterceptors: ResponseInterceptor[] = []
 
-  const { beforeRequest, responded, throwHttpErrors } = options
+  const { beforeRequest, responded } = options
   // 前置拦截器
   if (beforeRequest) {
     beforeInterceptors.push(beforeRequest)
@@ -68,7 +67,7 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
       }
 
       // 处理响应
-      if (!response.ok && throwHttpErrors) {
+      if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
