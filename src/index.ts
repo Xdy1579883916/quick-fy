@@ -83,15 +83,15 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
       }
 
       // 处理全局 responded 钩子
-      if (responded) {
-        data = await responded.onSuccess?.(clonedResponse, method, data)
+      if (responded && responded.onSuccess) {
+        data = await responded.onSuccess(clonedResponse, method, data)
       }
 
       return data
     }
     catch (error: any) {
-      if (responded) {
-        const result = await responded.onError?.(error, method)
+      if (responded && responded.onError) {
+        const result = await responded.onError(error, method)
         return result as T
       }
       throw error
