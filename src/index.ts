@@ -74,7 +74,8 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
 
       let data: T
       // 根据响应类型处理数据
-      const contentType = response.headers.get('content-type')
+      const contentType = getContentType(response)
+      const clonedResponse = response.clone()
       if (contentType && contentType.includes('application/json')) {
         data = await response.json()
       }
@@ -84,7 +85,7 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
 
       // 处理全局 responded 钩子
       if (responded) {
-        data = await responded.onSuccess?.(response, method, data)
+        data = await responded.onSuccess?.(clonedResponse, method, data)
       }
 
       return data
@@ -111,6 +112,10 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
     addBeforeInterceptor: (interceptor: RequestInterceptor) => beforeInterceptors.push(interceptor),
     addAfterInterceptor: (interceptor: ResponseInterceptor) => afterInterceptors.push(interceptor),
   }
+}
+
+export function getContentType(response: Response) {
+  return response.headers.get('content-type') || response.headers.get('Content-Type') || null
 }
 
 export const fy = createFy()
