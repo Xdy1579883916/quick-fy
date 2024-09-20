@@ -1,31 +1,31 @@
-interface Meta {
+export interface Meta {
   [key: string]: any
 }
 
-interface Method {
+export interface Method {
   url: string
   config: RequestInit
   // 用于存储请求的元数据，这些数据会在请求过程中传递给拦截器，但不会被 fetch 使用
   meta?: Meta
 }
 
-type RequestInterceptor = (method: Method) => Method | Promise<Method>
-type ResponseInterceptor = (response: Response) => Response | Promise<Response>
+export type RequestInterceptor = (method: Method) => Method | Promise<Method>
+export type ResponseInterceptor = (response: Response) => Response | Promise<Response>
 
-interface RespondedHook {
+export interface RespondedHook {
   onSuccess?: (response: Response, method: Method, data: any) => any | Promise<any>
   // error 是 Error类型
   onError?: (error: Error, method: Method) => any | Promise<any>
   onComplete?: (method: Method) => void | Promise<void>
 }
 
-interface CreateFyOptions {
+export interface CreateFyOptions {
   beforeRequest?: RequestInterceptor
   responded?: RespondedHook
   throwHttpErrors?: boolean
 }
 
-interface FyInstance {
+export interface FyInstance {
   request: <T = any>(url: string, init?: RequestInit, meta?: Meta) => Promise<T>
   get: <T = any>(url: string, init?: RequestInit, meta?: Meta) => Promise<T>
   post: <T = any>(url: string, init?: RequestInit, meta?: Meta) => Promise<T>
