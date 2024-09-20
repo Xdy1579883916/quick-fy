@@ -1,7 +1,7 @@
 {
   "name": "quick-fy",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "packageManager": "pnpm@9.4.0",
   "description": "quick-fy 是一个轻量级、可扩展的基于 fetch 的 HTTP 请求库",
   "author": "XiaDeYu <1579883916@qq.com>",
