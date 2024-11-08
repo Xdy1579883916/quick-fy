@@ -72,18 +72,28 @@ export function createFy(options: CreateFyOptions = {}): FyInstance {
       }
 
       let data: T
-      // 根据响应类型处理数据
-      const contentType = getContentType(response)
-      const clonedResponse = response.clone()
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json()
+
+      // 根据响应类型预处理数据
+      try {
+        const contentType = getContentType(response)
+        const clonedResponse = response.clone()
+        // 如果请求是jsonp 响应头可能包含 application/json, 但是实际返回的数据不是正确的JSON
+        if (contentType && contentType.includes('application/json')) {
+          data = await clonedResponse.json()
+        }
+        else {
+          data = await clonedResponse.text() as unknown as T
+        }
       }
-      else {
-        data = await response.text() as unknown as T
+      // eslint-disable-next-line unused-imports/no-unused-vars
+      catch (e) {
+        const clonedResponse = response.clone()
+        data = await clonedResponse.text() as unknown as T
       }
 
       // 处理全局 responded 钩子
       if (responded && responded.onSuccess) {
+        const clonedResponse = response.clone()
         data = await responded.onSuccess(clonedResponse, method, data)
       }
 
